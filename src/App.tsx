@@ -26,8 +26,8 @@ function App() {
     setContent(x);
   };
 
-  const [changedContent, setChangedContent] = useState<MyParagraphElement[]>(initialValue("emppty"));
-  const contentChanged = (e: MyParagraphElement[]) => {
+  const [changedContent, setChangedContent] = useState<MyValue>(initialValue("emppty"));
+  const contentChanged = (e: MyValue) => {
     setChangedContent(e);
   };
 

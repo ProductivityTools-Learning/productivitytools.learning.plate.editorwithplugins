@@ -1,8 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Plate, TEditableProps, useResetPlateEditor } from "@udecode/plate";
-import { MyParagraphElement, MyValue } from "./typescript/plateTypes";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Plate,
+  PlateProvider,
+  TEditableProps,
+  useResetPlateEditor,
+  createBasicElementsPlugin, //h1, quote, code
+} from "@udecode/plate";
+import { MyParagraphElement, MyValue, createMyPlugins } from "./typescript/plateTypes";
+import { Toolbar } from "./toolbar/Toolbar";
+import { ToolbarButtons } from "./ToolbarButtons";
 
-const ResetEditorOnValueChange = ({ value }: { value?: MyParagraphElement[] }) => {
+const ResetEditorOnValueChange = ({ value }: { value?: MyValue }) => {
   // console.log("ResetEditorOnValueChange");
   // console.log(value);
   const resetPlateEditor = useResetPlateEditor();
@@ -37,7 +45,7 @@ const initialValue = (content: string) => [
   } as MyParagraphElement,
 ];
 
-type PTPlateContentChanged = (content: MyParagraphElement[]) => void;
+type PTPlateContentChanged = (content: MyValue) => void;
 
 export interface PTPlateProps {
   content: MyParagraphElement[];
@@ -55,8 +63,8 @@ export const PTPlate: React.FunctionComponent<PTPlateProps> = ({
   contentChanged,
   readOnly,
 }: PTPlateProps) => {
-  const [value, setValue] = useState<MyParagraphElement[] | undefined>(content);
-  const [resetValue, setResetValue] = useState<MyParagraphElement[] | undefined>(content);
+  const [value, setValue] = useState<MyValue| undefined>(content);
+  const [resetValue, setResetValue] = useState<MyValue| undefined>(content);
 
   //if we use directly prop value, there was a delay in updating field when propValue changed
   //if we used value, the restet field was invoked every time when we started writing, which make writing not possible
@@ -65,29 +73,39 @@ export const PTPlate: React.FunctionComponent<PTPlateProps> = ({
     setResetValue(forceResetContent);
   }, [forceResetContent]);
 
-  const change = (e: MyParagraphElement[]) => {
+  const change = (e: MyValue) => {
     setValue(e);
     contentChanged(e);
+    console.log("content changed")
   };
 
   const editableProps: TEditableProps = {
     placeholder: "Type2...",
   };
 
+  const plugins = useMemo(
+    () =>
+      createMyPlugins([
+        createBasicElementsPlugin(), //h1-h6, quote, codes
+      ]),
+    []
+  );
+
   return (
     <div>
-      {readOnly ? (
-          <Plate<MyParagraphElement[]> editableProps={{ placeholder: "Type…" }} value={value} readOnly={true}></Plate>
-      ) : (
-        <Plate<MyParagraphElement[]>
-          editableProps={{ placeholder: "Type…" }}
-          value={value}
-          onChange={change}
-          readOnly={false}
-        >
-          <ResetEditorOnValueChange value={resetValue} />
+      {/* {readOnly ? (
+        <Plate<MyParagraphElement[]> editableProps={{ placeholder: "Type…" }} value={value} readOnly={true}></Plate>
+      ) : ( */}
+      <PlateProvider<MyValue> plugins={plugins} onChange={change}>
+        <Toolbar>
+          <ToolbarButtons />
+        </Toolbar>
+        <Plate editableProps={{ placeholder: "Type…" }} value={value} readOnly={false}>
+       
         </Plate>
-      )}
+        <ResetEditorOnValueChange value={resetValue} />
+      </PlateProvider>
+      {/* )} */}
       {/* <span>Plate content:</span>
       <span>{JSON.stringify(content)}</span> */}
     </div>
