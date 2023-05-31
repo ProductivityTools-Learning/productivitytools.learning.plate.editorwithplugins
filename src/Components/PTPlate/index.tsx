@@ -80,10 +80,9 @@ export const PTPlate: React.FunctionComponent<PTPlateProps> = ({
       {/* {readOnly ? (
           <Plate<MyParagraphElement[]> editableProps={{ placeholder: "Type…" }} value={value} readOnly={true}></Plate>
       ) : ( */}
-      <PlateProvider<MyParagraphElement[]> initialValue={value}  value={value} onChange={change}>
+      <PlateProvider<MyParagraphElement[]>  value={value} onChange={change}>
         <Plate<MyParagraphElement[]>
           editableProps={{ placeholder: "Type…" }}
-          value={value}
           readOnly={false}
         >
           <ResetEditorOnValueChange value={resetValue} />
