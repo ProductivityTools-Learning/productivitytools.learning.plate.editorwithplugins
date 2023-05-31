@@ -41,7 +41,7 @@ function App() {
       <br></br> <br></br> <br></br> <br></br>
       <span>plate2:</span>
       <PTPlate content={content} forceResetContent={content} contentChanged={contentChanged} readOnly={readOnly}></PTPlate>
-      changed content:{JSON.stringify(changedContent)}
+      changed content (in the app.tsx):{JSON.stringify(changedContent)}
     </div>
   );
 }

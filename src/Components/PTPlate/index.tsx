@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Plate, TEditableProps, useResetPlateEditor } from "@udecode/plate";
+import { Plate, PlateProvider, TEditableProps, useResetPlateEditor } from "@udecode/plate";
 import { MyParagraphElement, MyValue } from "./typescript/plateTypes";
 
 const ResetEditorOnValueChange = ({ value }: { value?: MyParagraphElement[] }) => {
-  // console.log("ResetEditorOnValueChange");
+  console.log("ResetEditorOnValueChange");
   // console.log(value);
   const resetPlateEditor = useResetPlateEditor();
+
   const isFirst = useRef(true);
   // console.log("isFirst");
   // console.log(isFirst.current);
@@ -76,20 +77,23 @@ export const PTPlate: React.FunctionComponent<PTPlateProps> = ({
 
   return (
     <div>
-      {readOnly ? (
+      {/* {readOnly ? (
           <Plate<MyParagraphElement[]> editableProps={{ placeholder: "Type…" }} value={value} readOnly={true}></Plate>
-      ) : (
+      ) : ( */}
+      <PlateProvider<MyParagraphElement[]> initialValue={value}  value={value} onChange={change}>
         <Plate<MyParagraphElement[]>
           editableProps={{ placeholder: "Type…" }}
           value={value}
-          onChange={change}
           readOnly={false}
         >
           <ResetEditorOnValueChange value={resetValue} />
         </Plate>
-      )}
-      {/* <span>Plate content:</span>
-      <span>{JSON.stringify(content)}</span> */}
+      </PlateProvider>
+      {/* )} */}
+      <span>Plate content in the ptplate/index:</span><br></br>
+      <span>{JSON.stringify(value)}</span><br></br>
+      <span>Reset value in the ptplate/index:</span><br></br>
+      <span>{JSON.stringify(resetValue)}</span>
     </div>
   );
 };
