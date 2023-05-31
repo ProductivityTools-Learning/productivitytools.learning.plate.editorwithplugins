@@ -15,19 +15,19 @@ const initialValue = (content: string) => [
 
 function App() {
   // const [content, setContent] = useState<string>("[{\"type\":\"title\",\"children\":[{\"text\":\"SWE Salary Zurich L7\"}]},{\"type\":\"paragraph\",\"children\":[{\"text\":\"The US base salary range for this full-time position is $218,000-$326,000 + bonus + equity + benefits. Transfer compensation is determined algorithmically and is non-negotiable. Your recruiter will share more about the specific salary for your targeted location during the hiring process\"}]}]");
-  const [content, setContent] = useState<MyParagraphElement[]>(
+  const [content, setContent] = useState<MyValue>(
     JSON.parse(
       '[{"type":"title","children":[{"text":"121"}]},{"type":"unorderedList","children":[{"type":"list-item","children":[{"text":""},{"type":"link","href":"https://cloud.google.com/blog/topics/developers-practitioners/troubleshooting-cloud-functions-connection-issues-cloud-sql-private-ips/","children":[{"text":"Blog "}]},{"text":"opublikowany"}]},{"type":"list-item","children":[{"text":""},{"type":"link","href":"https://www.youtube.com/watch?time_continue=9&v=eSP4Y9fDDkQ&feature=emb_logo&themeRefresh=1","children":[{"text":"Youtube "}]},{"text":"opublikowane"}]},{"type":"list-item","children":[{"text":"Przeprowadziła się do nowego domu, "}]},{"type":"list-item","children":[{"text":"Nie wie jak będzie się komunikować"}]}]}]'
     )
   );
   const [readOnly, setReadOnly] = useState<boolean>(false);
   const setRawContent = (value: string) => {
-    let x: MyParagraphElement[] = initialValue(value);
+    let x: MyValue = initialValue(value);
     setContent(x);
   };
 
-  const [changedContent, setChangedContent] = useState<MyParagraphElement[]>(initialValue("emppty"));
-  const contentChanged = (e: MyParagraphElement[]) => {
+  const [changedContent, setChangedContent] = useState<MyValue>(initialValue("emppty"));
+  const contentChanged = (e: MyValue) => {
     setChangedContent(e);
   };
 

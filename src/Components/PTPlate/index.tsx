@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Plate, PlateProvider, TEditableProps, useResetPlateEditor } from "@udecode/plate";
 import { MyParagraphElement, MyValue } from "./typescript/plateTypes";
 
-const ResetEditorOnValueChange = ({ value }: { value?: MyParagraphElement[] }) => {
+const ResetEditorOnValueChange = ({ value }: { value?: MyValue }) => {
   console.log("ResetEditorOnValueChange");
   // console.log(value);
   const resetPlateEditor = useResetPlateEditor();
@@ -38,11 +38,11 @@ const initialValue = (content: string) => [
   } as MyParagraphElement,
 ];
 
-type PTPlateContentChanged = (content: MyParagraphElement[]) => void;
+type PTPlateContentChanged = (content: MyValue) => void;
 
 export interface PTPlateProps {
-  content: MyParagraphElement[];
-  forceResetContent?: MyParagraphElement[];
+  content: MyValue;
+  forceResetContent?: MyValue;
   contentChanged: PTPlateContentChanged;
   readOnly: boolean;
 }
@@ -56,8 +56,8 @@ export const PTPlate: React.FunctionComponent<PTPlateProps> = ({
   contentChanged,
   readOnly,
 }: PTPlateProps) => {
-  const [value, setValue] = useState<MyParagraphElement[] | undefined>(content);
-  const [resetValue, setResetValue] = useState<MyParagraphElement[] | undefined>(content);
+  const [value, setValue] = useState<MyValue | undefined>(content);
+  const [resetValue, setResetValue] = useState<MyValue | undefined>(content);
 
   //if we use directly prop value, there was a delay in updating field when propValue changed
   //if we used value, the restet field was invoked every time when we started writing, which make writing not possible
@@ -66,7 +66,7 @@ export const PTPlate: React.FunctionComponent<PTPlateProps> = ({
     setResetValue(forceResetContent);
   }, [forceResetContent]);
 
-  const change = (e: MyParagraphElement[]) => {
+  const change = (e: MyValue) => {
     setValue(e);
     contentChanged(e);
   };
@@ -78,10 +78,10 @@ export const PTPlate: React.FunctionComponent<PTPlateProps> = ({
   return (
     <div>
       {/* {readOnly ? (
-          <Plate<MyParagraphElement[]> editableProps={{ placeholder: "Type…" }} value={value} readOnly={true}></Plate>
+          <Plate<MyValue> editableProps={{ placeholder: "Type…" }} value={value} readOnly={true}></Plate>
       ) : ( */}
-      <PlateProvider<MyParagraphElement[]>  value={value} onChange={change}>
-        <Plate<MyParagraphElement[]>
+      <PlateProvider<MyValue>  value={value} onChange={change}>
+        <Plate<MyValue>
           editableProps={{ placeholder: "Type…" }}
           readOnly={false}
         >
