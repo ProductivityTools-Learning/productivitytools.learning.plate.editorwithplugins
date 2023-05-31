@@ -1,6 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Plate, PlateProvider, TEditableProps, useResetPlateEditor } from "@udecode/plate";
-import { MyParagraphElement, MyValue } from "./typescript/plateTypes";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Plate,
+  PlateProvider,
+  TEditableProps,
+  useResetPlateEditor,
+  createBasicElementsPlugin, //h1, quote, code
+  ELEMENT_H1, //forced layout
+  createPlateUI,
+  ELEMENT_CODE_BLOCK,
+  CodeBlockElement,
+  withProps,
+  StyledElement,
+} from "@udecode/plate";
+import { MyParagraphElement, MyValue, createMyPlugins } from "./typescript/plateTypes";
+import { Toolbar } from "./toolbar/Toolbar";
+import { ToolbarButtons } from "./ToolbarButtons";
+import { withStyledPlaceHolders } from "./placeholder/withStyledPlaceHolders";
 
 const ResetEditorOnValueChange = ({ value }: { value?: MyValue }) => {
   console.log("ResetEditorOnValueChange");
@@ -47,6 +62,21 @@ export interface PTPlateProps {
   readOnly: boolean;
 }
 
+let components = createPlateUI({
+  [ELEMENT_CODE_BLOCK]: CodeBlockElement,
+  [ELEMENT_H1]: withProps(StyledElement, {
+    styles: {
+      root: {
+        margin: "0 0 0 0",
+        fontSize: "25px",
+        fontWeight: "1000",
+      },
+    },
+  }),
+  // customize your components by plugin key
+});
+components = withStyledPlaceHolders(components);
+
 //content sets initial content
 //foceResetContent, resets editor and sets new content
 //we cannot use content to reset, as later we are binding content to use state and in the contentChange we are updating state, if we bind content to reset it results in constant refresh
@@ -69,29 +99,46 @@ export const PTPlate: React.FunctionComponent<PTPlateProps> = ({
   const change = (e: MyValue) => {
     setValue(e);
     contentChanged(e);
+    console.log("content changed");
   };
 
   const editableProps: TEditableProps = {
     placeholder: "Type2...",
   };
 
+  const plugins = useMemo(
+    () =>
+      createMyPlugins(
+        [
+          createBasicElementsPlugin(), //h1-h6, quote, codes
+        ],
+        {
+          components: components,
+        }
+      ),
+    []
+  );
+
   return (
     <div>
       {/* {readOnly ? (
           <Plate<MyValue> editableProps={{ placeholder: "Type…" }} value={value} readOnly={true}></Plate>
       ) : ( */}
-      <PlateProvider<MyValue>  value={value} onChange={change}>
-        <Plate<MyValue>
-          editableProps={{ placeholder: "Type…" }}
-          readOnly={false}
-        >
+      <PlateProvider<MyValue> value={value} onChange={change} plugins={plugins}>
+        <Toolbar>
+          <ToolbarButtons />
+        </Toolbar>
+        <Plate<MyValue> editableProps={{ placeholder: "Type…" }} readOnly={false}>
           <ResetEditorOnValueChange value={resetValue} />
         </Plate>
       </PlateProvider>
       {/* )} */}
-      <span>Plate content in the ptplate/index:</span><br></br>
-      <span>{JSON.stringify(value)}</span><br></br>
-      <span>Reset value in the ptplate/index:</span><br></br>
+      <span>Plate content in the ptplate/index:</span>
+      <br></br>
+      <span>{JSON.stringify(value)}</span>
+      <br></br>
+      <span>Reset value in the ptplate/index:</span>
+      <br></br>
       <span>{JSON.stringify(resetValue)}</span>
     </div>
   );
