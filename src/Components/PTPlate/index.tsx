@@ -1,20 +1,41 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
+  useResetPlateEditor,
+  createBasicElementsPlugin, //h1, quote, code
+  createResetNodePlugin, //h1, quote, code
+  createSoftBreakPlugin, //h1, quote, code
   Plate,
   PlateProvider,
   TEditableProps,
-  useResetPlateEditor,
-  createBasicElementsPlugin, //h1, quote, code
+  createNormalizeTypesPlugin, //forced layout
+  createTrailingBlockPlugin, //forced layout
   ELEMENT_H1, //forced layout
   createPlateUI,
   ELEMENT_CODE_BLOCK,
   CodeBlockElement,
-  withProps,
+  createExitBreakPlugin,
+  createHeadingPlugin,
   StyledElement,
+  createPluginFactory
 } from "@udecode/plate";
-import { MyParagraphElement, MyValue, createMyPlugins } from "./typescript/plateTypes";
+import { forcedLayoutPlugin } from "./forced-layout/forcedLayoutPlugin"; //forced layout
+import { withProps } from "@udecode/plate";
+import {
+  createMyPlugins,
+  MyParagraphElement,
+  MyEditor,
+  MyPlatePlugin,
+  MyValue
+} from "./typescript/plateTypes";
 import { Toolbar } from "./toolbar/Toolbar";
 import { ToolbarButtons } from "./ToolbarButtons";
+import { resetBlockTypePlugin } from "./reset-node/resetBlockTypePlugin";
+import { softBreakPlugin } from "./soft-break/softBreakPlugin";
+import { exitBreakPlugin } from "./exit-break/exitBreakPlugin";
+import { ELEMENT_TITLE } from "./pttitle/titleconsts";
+import { createTitlePlugin } from "./pttitle/titleplugin"
+
+
 import { withStyledPlaceHolders } from "./placeholder/withStyledPlaceHolders";
 
 const ResetEditorOnValueChange = ({ value }: { value?: MyValue }) => {
@@ -64,18 +85,27 @@ export interface PTPlateProps {
 
 let components = createPlateUI({
   [ELEMENT_CODE_BLOCK]: CodeBlockElement,
-  [ELEMENT_H1]: withProps(StyledElement, {
+  [ELEMENT_TITLE]: withProps(StyledElement, {
     styles: {
       root: {
         margin: "0 0 0 0",
         fontSize: "25px",
         fontWeight: "1000",
-      },
-    },
+        color:"gray"
+      }
+    }
   }),
-  // customize your components by plugin key
+  [ELEMENT_H1]: withProps(StyledElement, {
+    styles: {
+      root: {
+        margin: "0 0 0 0",
+        fontSize: "20px",
+        fontWeight: "1000"
+      }
+    }
+  })
 });
-components = withStyledPlaceHolders(components);
+components = components;
 
 //content sets initial content
 //foceResetContent, resets editor and sets new content
@@ -102,18 +132,25 @@ export const PTPlate: React.FunctionComponent<PTPlateProps> = ({
     console.log("content changed");
   };
 
-  const editableProps: TEditableProps = {
-    placeholder: "Type2...",
+  const editableProps: TEditableProps<MyValue> = {
+    placeholder: "Type..2."
   };
-
   const plugins = useMemo(
     () =>
       createMyPlugins(
         [
-          createBasicElementsPlugin(), //h1-h6, quote, codes
+          createBasicElementsPlugin(), //h1-h6, quote, code
+          createTitlePlugin(),
+          createResetNodePlugin(resetBlockTypePlugin), //reseting formatinog on enter
+          //createSoftBreakPlugin(softBreakPlugin), //enter new line without stsarting new block, shift_enter
+
+          createNormalizeTypesPlugin(forcedLayoutPlugin), //forced layout
+         // createTrailingBlockPlugin(trailingBlockPlugin), //forced layout
+          createExitBreakPlugin(exitBreakPlugin), //forced layout
+          //createHeadingPlugin() //forced layout
         ],
         {
-          components: components,
+          components: components
         }
       ),
     []
@@ -128,7 +165,7 @@ export const PTPlate: React.FunctionComponent<PTPlateProps> = ({
         <Toolbar>
           <ToolbarButtons />
         </Toolbar>
-        <Plate<MyValue> editableProps={{ placeholder: "Type…" }} readOnly={false}>
+        <Plate<MyValue> editableProps={editableProps} readOnly={false}>
           <ResetEditorOnValueChange value={resetValue} />
         </Plate>
       </PlateProvider>
