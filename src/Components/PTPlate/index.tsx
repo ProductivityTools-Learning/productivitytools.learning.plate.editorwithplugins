@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
-  useResetPlateEditor,
+  useResetPlateEditor,//if in editor with plugins, not used, if in plate it is used
   createBasicElementsPlugin, //h1, quote, code
   createResetNodePlugin, //h1, quote, code
   createSoftBreakPlugin, //h1, quote, code
@@ -16,9 +16,14 @@ import {
   createExitBreakPlugin,
   createHeadingPlugin,
   StyledElement,
-  createPluginFactory
+  createPluginFactory,
+  createLinkPlugin,
+  createIndentPlugin,//list
+  createListPlugin,//list
+  createIndentListPlugin,//list
 } from "@udecode/plate";
 import { forcedLayoutPlugin } from "./forced-layout/forcedLayoutPlugin"; //forced layout
+import { trailingBlockPlugin } from "./trailing-block/trailingBlockPlugin"; //forced layout
 import { withProps } from "@udecode/plate";
 import {
   createMyPlugins,
@@ -34,7 +39,10 @@ import { softBreakPlugin } from "./soft-break/softBreakPlugin";
 import { exitBreakPlugin } from "./exit-break/exitBreakPlugin";
 import { ELEMENT_TITLE } from "./pttitle/titleconsts";
 import { createTitlePlugin } from "./pttitle/titleplugin"
-
+import { linkPlugin } from "./link/linkPlugin";
+import { indentPlugin } from './indent/indentPlugin';
+import { indentListPlugin } from './indent-list/indentListPlugin';
+import {components} from './components/components'
 
 import { withStyledPlaceHolders } from "./placeholder/withStyledPlaceHolders";
 
@@ -83,29 +91,7 @@ export interface PTPlateProps {
   readOnly: boolean;
 }
 
-let components = createPlateUI({
-  [ELEMENT_CODE_BLOCK]: CodeBlockElement,
-  [ELEMENT_TITLE]: withProps(StyledElement, {
-    styles: {
-      root: {
-        margin: "0 0 0 0",
-        fontSize: "25px",
-        fontWeight: "1000",
-        color:"gray"
-      }
-    }
-  }),
-  [ELEMENT_H1]: withProps(StyledElement, {
-    styles: {
-      root: {
-        margin: "0 0 0 0",
-        fontSize: "20px",
-        fontWeight: "1000"
-      }
-    }
-  })
-});
-components = components;
+
 
 //content sets initial content
 //foceResetContent, resets editor and sets new content
@@ -142,12 +128,16 @@ export const PTPlate: React.FunctionComponent<PTPlateProps> = ({
           createBasicElementsPlugin(), //h1-h6, quote, code
           createTitlePlugin(),
           createResetNodePlugin(resetBlockTypePlugin), //reseting formatinog on enter
-          //createSoftBreakPlugin(softBreakPlugin), //enter new line without stsarting new block, shift_enter
+          createSoftBreakPlugin(softBreakPlugin), //enter new line without stsarting new block, shift_enter
 
           createNormalizeTypesPlugin(forcedLayoutPlugin), //forced layout
-         // createTrailingBlockPlugin(trailingBlockPlugin), //forced layout
+          createTrailingBlockPlugin(trailingBlockPlugin), //forced layout
           createExitBreakPlugin(exitBreakPlugin), //forced layout
           //createHeadingPlugin() //forced layout
+          createLinkPlugin(linkPlugin), //urls
+          createListPlugin(),//list
+          createIndentListPlugin(indentListPlugin),//list
+          createIndentPlugin(indentPlugin),//list
         ],
         {
           components: components
