@@ -3,6 +3,9 @@ import { Link } from "@styled-icons/material/Link";
 import { LinkToolbarButton,ToolbarButton } from "@udecode/plate";
 import { IndentToolbarButtons } from './indent/IndentToolbarButtons';
 import { ListToolbarButtons } from './list/ListToolbarButtons';
+import { TableToolbarButtons } from './table/TableToolbarButtons';
+import React from 'react'
+
 
 export const ToolbarButtons = () => {
   return (
@@ -11,6 +14,7 @@ export const ToolbarButtons = () => {
       <LinkToolbarButton icon={<Link />} />
       <ListToolbarButtons />
       <IndentToolbarButtons />
+      <TableToolbarButtons />
       
       {/* <ListToolbarButtons />
       <IndentToolbarButtons />

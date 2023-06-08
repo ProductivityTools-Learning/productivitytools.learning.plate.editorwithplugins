@@ -21,6 +21,7 @@ import {
   createIndentPlugin,//list
   createListPlugin,//list
   createIndentListPlugin,//list
+  createTablePlugin,//table
 } from "@udecode/plate";
 import { forcedLayoutPlugin } from "./forced-layout/forcedLayoutPlugin"; //forced layout
 import { trailingBlockPlugin } from "./trailing-block/trailingBlockPlugin"; //forced layout
@@ -138,6 +139,12 @@ export const PTPlate: React.FunctionComponent<PTPlateProps> = ({
           createListPlugin(),//list
           createIndentListPlugin(indentListPlugin),//list
           createIndentPlugin(indentPlugin),//list
+          createTablePlugin({
+            options: {
+              initialTableWidth: 600,
+              // disableMarginLeft: true,
+            },
+          }),
         ],
         {
           components: components
