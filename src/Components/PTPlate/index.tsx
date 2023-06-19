@@ -22,6 +22,10 @@ import {
   createListPlugin, //list
   createIndentListPlugin, //list
   createTablePlugin, //table
+  createMediaEmbedPlugin,//image
+  createImagePlugin, //image
+  createSelectOnBackspacePlugin, //image
+  ELEMENT_IMAGE,//image
 } from "@udecode/plate";
 import { forcedLayoutPlugin } from "./forced-layout/forcedLayoutPlugin"; //forced layout
 import { trailingBlockPlugin } from "./trailing-block/trailingBlockPlugin"; //forced layout
@@ -136,6 +140,15 @@ export const PTPlate: React.FunctionComponent<PTPlateProps> = ({
             options: {
               initialTableWidth: 600,
               // disableMarginLeft: true,
+            },
+          }),
+          createImagePlugin(),
+          createMediaEmbedPlugin(),
+          createSelectOnBackspacePlugin({
+            options: {
+              query: {
+                allow: [ELEMENT_IMAGE],
+              },
             },
           }),
         ],
