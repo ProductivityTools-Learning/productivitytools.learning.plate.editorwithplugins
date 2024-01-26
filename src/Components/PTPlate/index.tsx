@@ -38,6 +38,7 @@ import { softBreakPlugin } from "./soft-break/softBreakPlugin";
 import { exitBreakPlugin } from "./exit-break/exitBreakPlugin";
 import { ELEMENT_TITLE } from "./pttitle/titleconsts";
 import { createTitlePlugin } from "./pttitle/titleplugin";
+import {createTaskPlugin} from "./pttask/taskplugin"
 import { linkPlugin } from "./link/linkPlugin";
 import { indentPlugin } from "./indent/indentPlugin";
 import { indentListPlugin } from "./indent-list/indentListPlugin";
@@ -125,6 +126,7 @@ export const PTPlate: React.FunctionComponent<PTPlateProps> = ({
         [
           createBasicElementsPlugin(), //h1-h6, quote, code
           createTitlePlugin(),
+          createTaskPlugin(),
           createResetNodePlugin(resetBlockTypePlugin), //reseting formatinog on enter
           createSoftBreakPlugin(softBreakPlugin), //enter new line without stsarting new block, shift_enter
 
