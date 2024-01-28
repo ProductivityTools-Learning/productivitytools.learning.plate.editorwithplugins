@@ -5,7 +5,10 @@ import { IndentToolbarButtons } from './indent/IndentToolbarButtons';
 import { ListToolbarButtons } from './list/ListToolbarButtons';
 import { TableToolbarButtons } from './table/TableToolbarButtons';
 import {PTTaskToolbarButtons} from './toolbar/PTTaskToolbarButtons'
+import {PTTestButtons} from './toolbar/PTTestButtons'
+
 import { Image } from '@styled-icons/material/Image';
+
 
 import React from 'react'
 
@@ -19,6 +22,7 @@ export const ToolbarButtons = () => {
       <TableToolbarButtons />
       <ImageToolbarButton icon={<Image />} />
       <PTTaskToolbarButtons />
+      <PTTestButtons/>
 
 
       {/* <ListToolbarButtons />

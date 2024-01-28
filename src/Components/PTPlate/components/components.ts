@@ -25,6 +25,7 @@ import {
 import { ELEMENT_TITLE } from "../pttitle/titleconsts";
 import { ELEMENT_TASK } from "../pttask/taskconsts"
 import { withProps } from "@udecode/plate";
+import {TaskElement} from "../pttask/taskelement"
 
 
 
@@ -49,13 +50,5 @@ export const components = createPlateUI({
       },
     },
   }),
-  [ELEMENT_TASK]: withProps(StyledElement, {
-    styles: {
-      root: {
-        margin: "0 0 0 0",
-        fontWeight: "1000",
-        color: "red"
-      },
-    },
-  })
+  [ELEMENT_TASK]: TaskElement
 });
