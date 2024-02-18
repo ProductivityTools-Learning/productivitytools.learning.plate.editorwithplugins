@@ -9,9 +9,6 @@ import {
   ToolbarButton,
   toggleIndentList
 } from '@udecode/plate';
-import {
-    KEY_ALIGN
-} from '../pttest/testplugin'
 import { useMyPlateEditorRef } from '../typescript/plateTypes';
 
 
