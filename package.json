@@ -15,7 +15,6 @@
     "@udecode/plate": "^20.6.3",
     "@udecode/plate-basic-elements": "^20.4.0",
     "@udecode/plate-common": "^30.4.5",
-    "@udecode/plate-list": "^30.5.3",
     "@udecode/plate-test-utils": "13.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
